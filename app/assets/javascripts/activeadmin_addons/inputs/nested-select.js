@@ -77,6 +77,7 @@ $(function() {
       var minimumInputLength = element.data('minimum-input-length');
       var order = element.data('order');
       var parentId = element.data('parent-id');
+      var filtersAttributes = element.data('filters-attributes');
       var selectInstance;
 
       var select2Config = {
@@ -116,7 +117,18 @@ $(function() {
               query.q[parent + '_eq'] = parentId;
             }
 
-            return query;
+            if (filtersAttributes) {
+              $.each(filtersAttributes, function(index, attribute) {
+                var attributeElement = $('#' + model + '_' + attribute);
+                var attributeValue = attributeElement.val();
+
+                if (attributeElement) {
+                  query.q[attribute + '_eq'] = attributeValue;
+                }
+              });
+            }
+
+            return $.extend(query, element.triggerHandler('nestedSelect:query', query));
           },
           processResults: function(data) {
             if (data.constructor == Object) {

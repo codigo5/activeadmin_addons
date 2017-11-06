@@ -23,6 +23,7 @@ $(function() {
       var responseRoot = $(el).data('response-root');
       var minimumInputLength = $(el).data('minimum-input-length');
       var order = $(el).data('order');
+      var filtersAttributes = $(el).data('filters-attributes');
 
       var selectOptions = {
         minimumInputLength: minimumInputLength,
@@ -46,7 +47,18 @@ $(function() {
               },
             };
 
-            return query;
+            if (filtersAttributes) {
+              $.each(filtersAttributes, function(index, attribute) {
+                var attributeElement = $('#' + model + '_' + attribute);
+                var attributeValue = attributeElement.val();
+
+                if (attributeElement) {
+                  query.q[attribute + '_eq'] = attributeValue;
+                }
+              });
+            }
+
+            return $.extend(query, $(el).triggerHandler('nestedSelect:query', query));
           },
           processResults: function(data) {
             if (data.constructor == Object) {

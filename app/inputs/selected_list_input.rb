@@ -17,6 +17,9 @@ class SelectedListInput < Formtastic::Inputs::SelectInput
     load_data_attr(:display_name, default: first_field || default_display_name)
     load_data_attr(:minimum_input_length, default: 1)
     load_data_attr(:width, default: "100%")
+    load_data_attr(:filters_attributes,
+      value: @options[:filters_attributes],
+      formatter: :to_json)
     load_data_attr(
       :order,
       value: @options[:order_by],

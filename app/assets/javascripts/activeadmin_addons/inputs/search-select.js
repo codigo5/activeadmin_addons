@@ -8,12 +8,14 @@ $(function() {
   function setupSearchSelect(container) {
     $('.search-select-input, .search-select-filter-input, ajax-filter-input', container).each(function(i, el) {
       var url = $(el).data('url');
+      var model = $(el).data('model');
       var fields = $(el).data('fields');
       var displayName = $(el).data('display-name');
       var width = $(el).data('width');
       var responseRoot = $(el).data('response-root');
       var minimumInputLength = $(el).data('minimum-input-length');
       var order = $(el).data('order');
+      var filtersAttributes = $(el).data('filters-attributes');
 
       var selectOptions = {
         width: width,
@@ -43,7 +45,18 @@ $(function() {
               },
             };
 
-            return query;
+            if (filtersAttributes) {
+              $.each(filtersAttributes, function(index, attribute) {
+                var attributeElement = $('#' + model + '_' + attribute);
+                var attributeValue = attributeElement.val();
+
+                if (attributeElement) {
+                  query.q[attribute + '_eq'] = attributeValue;
+                }
+              });
+            }
+
+            return $.extend(query, $(el).triggerHandler('nestedSelect:query', query));
           },
           processResults: function(data) {
             if (data.constructor == Object) {
