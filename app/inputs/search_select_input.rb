@@ -23,7 +23,7 @@ class SearchSelectInput < Formtastic::Inputs::SelectInput
     load_data_attr(:minimum_input_length, default: 1)
     load_data_attr(:width, default: "80%")
     load_data_attr(:filters_attributes,
-      value: @options[:filters_attributes],
+      value: filters_attributes,
       formatter: :to_json)
     load_data_attr(
       :order,

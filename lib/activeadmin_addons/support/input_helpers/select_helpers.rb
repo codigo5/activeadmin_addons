@@ -62,6 +62,16 @@ module ActiveAdminAddons
       selected_collection.first
     end
 
+    def filters_attributes
+      if @options[:filters_attributes]
+        if @options[:filters_attributes].is_a?(Array)
+          Hash[@options[:filters_attributes].map { |v| [v, v] }]
+        else
+          @options[:filters_attributes]
+        end
+      end
+    end
+
     private
 
     def active_record_relation?(value)

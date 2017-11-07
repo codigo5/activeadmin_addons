@@ -50,7 +50,7 @@ $(function() {
 
             if (filtersAttributes) {
               $.each(filtersAttributes, function(index, attribute) {
-                var attributeElement = $('#' + model + '_' + attribute);
+                var attributeElement = $('#' + model + '_' + index);
                 var attributeValue = attributeElement.val();
 
                 if (attributeElement) {
@@ -88,7 +88,7 @@ $(function() {
 
       if (filtersAttributes) {
         $.each(filtersAttributes, function(index, attribute) {
-          var attributeElement = $('#' + model + '_' + attribute);
+          var attributeElement = $('#' + model + '_' + index);
           attributeElement.on('select2:select', setFilterValue);
           attributeElement.on('select2:unselect', setFilterValue);
         });

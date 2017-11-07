@@ -25,7 +25,7 @@ class NestedLevelInput < Formtastic::Inputs::SelectInput
     load_data_attr(:response_root, default: tableize_method)
     load_data_attr(:width, default: "80%")
     load_data_attr(:filters_attributes,
-      value: @options[:filters_attributes],
+      value: filters_attributes,
       formatter: :to_json)
     load_data_attr(:order,
       value: @options[:order_by],
