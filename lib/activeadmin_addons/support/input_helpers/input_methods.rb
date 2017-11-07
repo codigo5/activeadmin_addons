@@ -19,7 +19,7 @@ module ActiveAdminAddons
     end
 
     def association_name
-      valid_method.to_s.singularize.chomp("_id")
+      (options[:class_name] || valid_method).to_s.singularize.chomp("_id")
     end
 
     def method_model
