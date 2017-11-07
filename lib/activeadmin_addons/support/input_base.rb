@@ -44,7 +44,7 @@ module ActiveAdminAddons
     end
 
     def input_html_model
-      input_html_options[:id].chomp('_' + method.to_s)
+      input_html_options[:id].chomp('_' + method.to_s).chomp('_' + method.to_s + '_id')
     end
   end
 end
