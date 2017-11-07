@@ -15,6 +15,14 @@ module ActiveAdminAddons
       result.values.first.value
     end
 
+    def input_html_options_name
+      if builder.options.key?(:index)
+        "#{object_name}[#{builder.options[:index]}][#{input_method}]"
+      else
+        "#{object_name}[#{input_method}]"
+      end
+    end
+
     def eq_input_name
       "#{valid_method}_eq"
     end
