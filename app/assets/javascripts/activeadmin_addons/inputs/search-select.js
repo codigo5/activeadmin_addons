@@ -16,6 +16,7 @@ $(function() {
       var minimumInputLength = $(el).data('minimum-input-length');
       var order = $(el).data('order');
       var filtersAttributes = $(el).data('filters-attributes');
+      var selectInstance;
 
       var selectOptions = {
         width: width,
@@ -78,7 +79,19 @@ $(function() {
         },
       };
 
-      $(el).select2(selectOptions);
+      selectInstance = $(el).select2(selectOptions);
+
+      function setFilterValue() {
+        selectInstance.val(null).trigger('select2:select').trigger('change');
+      }
+
+      if (filtersAttributes) {
+        $.each(filtersAttributes, function(index, attribute) {
+          var attributeElement = $('#' + model + '_' + attribute);
+          attributeElement.on('select2:select', setFilterValue);
+          attributeElement.on('select2:unselect', setFilterValue);
+        });
+      }
     });
   }
 });

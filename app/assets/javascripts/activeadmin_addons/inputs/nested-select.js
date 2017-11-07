@@ -167,6 +167,18 @@ $(function() {
         $(parentSelector).on('select2:select', setParentValue);
         $(parentSelector).on('select2:unselect', setParentValue);
       }
+
+      function setFilterValue() {
+        selectInstance.val(null).trigger('select2:select').trigger('change');
+      }
+
+      if (filtersAttributes) {
+        $.each(filtersAttributes, function(index, attribute) {
+          var attributeElement = $('#' + model + '_' + attribute);
+          attributeElement.on('select2:select', setFilterValue);
+          attributeElement.on('select2:unselect', setFilterValue);
+        });
+      }
     });
   }
 });
