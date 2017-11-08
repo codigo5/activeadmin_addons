@@ -76,6 +76,7 @@ $(function() {
       var collection = element.data('collection');
       var minimumInputLength = element.data('minimum-input-length');
       var order = element.data('order');
+      var parentFilterName = element.data('parent-filter-name');
       var parentId = element.data('parent-id');
       var filtersAttributes = element.data('filters-attributes');
       var selectInstance;
@@ -114,7 +115,7 @@ $(function() {
             };
 
             if (!!parent) {
-              query.q[parent + '_eq'] = parentId;
+              query.q[parentFilterName + '_eq'] = parentId;
             }
 
             if (filtersAttributes) {

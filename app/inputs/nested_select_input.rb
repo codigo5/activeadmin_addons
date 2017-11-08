@@ -60,6 +60,11 @@ class NestedSelectInput < Formtastic::Inputs::StringInput
       parent_level_data = hierarchy[next_idx] if hierarchy.count != next_idx
       if parent_level_data
         level_data[:parent_attribute] = parent_level_data[:attribute]
+        level_data[:parent_attribute_path] ||= []
+        unless level_data[:parent_attribute_path].is_a?(Array)
+          level_data[:parent_attribute_path] = [level_data[:parent_attribute_path]]
+        end
+        level_data[:parent_attribute_path] = [level_data[:attribute]] + level_data[:parent_attribute_path]
         set_parent_value(level_data)
       end
     end
@@ -68,15 +73,18 @@ class NestedSelectInput < Formtastic::Inputs::StringInput
   def set_parent_value(level_data)
     parent_attribute = level_data[:parent_attribute]
     build_virtual_attr(parent_attribute) unless @object.respond_to?(parent_attribute)
-    instance = instance_from_attribute_name(level_data[:attribute])
-    if instance && instance.respond_to?(parent_attribute)
-      @object.send("#{parent_attribute}=", instance.send(parent_attribute))
+    parent_instance = level_data[:parent_attribute_path].reduce(@object) do |parent_instance, attribute|
+      instance_from_attribute_name(attribute, parent_instance)
+    end
+    if parent_instance && parent_instance.respond_to?(parent_attribute)
+      @object.send("#{parent_attribute}=", parent_instance.send(parent_attribute))
     end
   end
 
-  def instance_from_attribute_name(attribute)
+  def instance_from_attribute_name(attribute, object = nil)
+    object = @object if object.nil?
     return unless attribute
-    attribute_value = @object.send(attribute)
+    attribute_value = object.send(attribute)
     return unless attribute_value
     klass = attribute.to_s.chomp("_id").camelize.constantize
     klass.find_by_id(attribute_value)

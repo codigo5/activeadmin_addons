@@ -38,6 +38,9 @@ class NestedLevelInput < Formtastic::Inputs::SelectInput
     return unless @options[:parent_attribute]
     load_data_attr(:parent, value: @options[:parent_attribute])
     load_data_attr(:parent_id, value: @object.send(@options[:parent_attribute]), default: -1)
+    load_data_attr(:parent_filter_name,
+      value: @options[:parent_filter_name],
+      default: @options[:parent_attribute])
   end
 
   def load_collection_data
