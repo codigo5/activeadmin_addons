@@ -43,7 +43,7 @@ module ActiveAdminAddons
       return unless item
       {
         id: item.send((valid_options[:value] || :id)),
-        text: item.send((valid_options[:display_name] || valid_options[:fields].try(:first) || ActiveadminAddons.default_display_name(item)))
+        text: extract_item_label(item)
       }
     end
 
@@ -55,7 +55,16 @@ module ActiveAdminAddons
     end
 
     def selected_collection
-      method_model.where(id: input_value)
+      chain = method_model.where(id: input_value)
+      if decorate?
+        chain =
+          if decorator
+            decorator.decorate(chain)
+          else
+            chain.decorate
+          end
+      end
+      chain
     end
 
     def selected_item
@@ -87,6 +96,25 @@ module ActiveAdminAddons
 
     def collection
       valid_options[:collection] || []
+    end
+
+    def extract_item_label(item)
+      field = [
+        valid_options[:display_name],
+        valid_options[:fields].try(:first)
+      ].reject(&:blank?).find { |method_name| item.respond_to?(method_name) }
+      field ||= ActiveadminAddons.default_display_name(item)
+      item.public_send(field)
+    end
+
+    def decorate?
+      options[:decorate]
+    end
+
+    def decorator
+      decorator_klass = options[:decorate_with]
+      return decorator_klass.constantize if decorator_klass.kind_of?(String)
+      decorator_klass
     end
   end
 end
